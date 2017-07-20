@@ -1,5 +1,6 @@
 package com.rubel.sms.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +42,7 @@ public class Product implements Serializable {
     private String state;
 
     @Transient
+    @JsonIgnore
     private MultipartFile productImage;
 
     public Product() {
