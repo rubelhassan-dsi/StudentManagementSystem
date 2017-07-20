@@ -8,8 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +42,25 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView createProduct(@ModelAttribute("product") Product product, BindingResult result){
+    public ModelAndView createProduct(@ModelAttribute("product") Product product, BindingResult result,
+                                      HttpServletRequest request){
         if(result.hasErrors()){
             return new ModelAndView("redirect:/products/create");
         }
 
-        productService.saveOrUpdate(product);
+        product = productService.saveOrUpdate(product);
+
+        MultipartFile productImage = product.getProductImage();
+
+        if(productImage != null && !productImage.isEmpty()){
+            String rootDir = request.getSession().getServletContext().getRealPath("/");
+            String uploadDir = rootDir + "WEB-INF/resources/images/" + product.getProductId() + ".jpeg";
+            try{
+               productImage.transferTo(new File(uploadDir));
+            }catch (Exception e){
+                throw new RuntimeException("Product Image Uploding  Error !!!");
+            }
+        }
 
         return new ModelAndView("redirect:/products");
     }

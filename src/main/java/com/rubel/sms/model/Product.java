@@ -1,11 +1,13 @@
 package com.rubel.sms.model;
 
 import org.hibernate.annotations.Type;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 
 /**
  * Created by rubel on 7/18/17.
@@ -37,6 +39,9 @@ public class Product implements Serializable {
     private boolean availability;
 
     private String state;
+
+    @Transient
+    private MultipartFile productImage;
 
     public Product() {
         super();
@@ -153,5 +158,13 @@ public class Product implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public MultipartFile getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
     }
 }

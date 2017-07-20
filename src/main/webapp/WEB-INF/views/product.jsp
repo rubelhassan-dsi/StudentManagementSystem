@@ -16,7 +16,6 @@
           href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 </head>
 <body>
-${author}<c:out value="${author}"/>
 <section>
     <div class="jumbotron">
         <div class="container">
@@ -28,20 +27,23 @@ ${author}<c:out value="${author}"/>
 <section>
     <div class="container">
         <div class="row">
-                <div class="col-sm-9 col-md-6" style="padding-bottom: 15px;">
-                    <div class="thumbnail">
-                        <div class="caption">
-                            <h3>Product Name: ${product.getName()}</h3>
-                            <p>Description: ${product.description}</p>
-                            <p>Product Price: ${product.unitPrice} USD</p>
-                            <p>Manufacturere: ${product.manufacturer}</p>
-                            <p>Available ${product.unitsInStock} units in stock</p>
-                            <a href=" <spring:url value="/products" />" class="btn btn-primary">
-                                <span class="glyphicon-info-sign glyphicon"/></span> All Products
-                            </a>
-                        </div>
+            <div class="col-md-4">
+                <img class="img-thumbnail" src="<c:url value="/images/${product.productId}.jpeg"/>"/>
+        </div>
+            <div class="col-md-8" style="padding-bottom: 15px;">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>Product Name: ${product.getName()}</h3>
+                        <p>Description: ${product.description}</p>
+                        <p>Product Price: ${product.unitPrice} USD</p>
+                        <p>Manufacturere: ${product.manufacturer}</p>
+                        <p>Available ${product.unitsInStock} units in stock</p>
+                        <a href=" <spring:url value="/products" />" class="btn btn-primary">
+                            <span class="glyphicon-info-sign glyphicon"/></span> All Products
+                        </a>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 </section>

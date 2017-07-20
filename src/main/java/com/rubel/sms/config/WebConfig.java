@@ -3,6 +3,7 @@ package com.rubel.sms.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -27,10 +28,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resourceViewResolver;
     }
 
+    @Bean
+    public CommonsMultipartResolver multipartResolver(){
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setDefaultEncoding("utf-8");
+        resolver.setMaxUploadSize(10240000);
+        return resolver;
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
-        registry.addResourceHandler("/resources/**")
-                .addResourceLocations("/WEB-INF/resources");
+        registry.addResourceHandler("/resources/**", "/images/**")
+                .addResourceLocations("/WEB-INF/resources/", "/WEB-INF/resources/images/");
     }
 
     @Override
