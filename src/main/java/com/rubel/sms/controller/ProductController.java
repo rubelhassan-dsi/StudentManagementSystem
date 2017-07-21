@@ -2,6 +2,7 @@ package com.rubel.sms.controller;
 
 import com.rubel.sms.model.Product;
 import com.rubel.sms.service.ProductService;
+import com.rubel.sms.util.NoProductsFoundUnderCategoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,7 @@ public class ProductController {
     public ModelAndView findProductsByCategory(@ModelAttribute("product") Product product, @PathVariable("category")
             String category){
         List<Product> products = productService.findAllByCatergory(category);
+
         ModelAndView modelAndView = new ModelAndView("products");
         modelAndView.addObject("products", products);
         return modelAndView;
