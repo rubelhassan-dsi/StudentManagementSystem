@@ -1,6 +1,7 @@
 package com.rubel.sms.dao;
 
 import com.rubel.sms.model.Product;
+import com.rubel.sms.util.NoProductsFoundUnderCategoryException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -43,8 +44,12 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     public Product findById(Long id) {
-        return (Product) session.getCurrentSession().createQuery("from Product where id = :id")
-                .setParameter("id", id)
-                .getSingleResult();
+        try {
+            return (Product) session.getCurrentSession().createQuery("from Product where id = :id")
+                    .setParameter("id", id)
+                    .getSingleResult();
+        }catch (Exception e){
+            throw new NoProductsFoundUnderCategoryException(Long.toString(id));
+        }
     }
 }
