@@ -36,8 +36,8 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     public List<Product> getProductsByFilter(Map<String, List<String>> filterParams) {
-        return  session.getCurrentSession().createQuery("from Product where category in :categories and " +
-                "manufacturer in :manufacturers")
+        return  session.getCurrentSession()
+                .createQuery("from Product where category in :categories and " + "manufacturer in :manufacturers")
                 .setParameter("categories", filterParams.get("categories"))
                 .setParameter("manufacturers", filterParams.get("manufacturers"))
                 .list();

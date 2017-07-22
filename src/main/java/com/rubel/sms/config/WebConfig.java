@@ -1,18 +1,23 @@
 package com.rubel.sms.config;
 
+import com.rubel.sms.interceptor.ProcessingTimeLogInterceptor;
+import com.rubel.sms.interceptor.PromoCodeInterceptor;
 import com.rubel.sms.model.Product;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -71,6 +76,37 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return view;
     }
 
+    @Bean
+    public HandlerInterceptor promoCodeInterceptor(){
+        PromoCodeInterceptor interceptor = new PromoCodeInterceptor();
+        interceptor.setPromoCode("OFFER2017");
+        interceptor.setOfferRedirect("products?id=8");
+        interceptor.setErrorRedirect("invalidPromoCode");
+        return interceptor;
+    }
+
+    @Bean
+    public MessageSource messageSource(){
+        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+        source.setBasename("messages");
+        source.setDefaultEncoding("UTF-8");
+        return source;
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validator(){
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(new ProcessingTimeLogInterceptor());
+        registry.addInterceptor(promoCodeInterceptor())
+            .addPathPatterns("/**/products/specialOffer");
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler("/resources/**", "/images/**")
@@ -82,5 +118,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         UrlPathHelper helper = new UrlPathHelper();
         helper.setRemoveSemicolonContent(false);
         configurer.setUrlPathHelper(helper);
+    }
+
+    @Override
+    public Validator getValidator() {
+        return validator();
     }
 }

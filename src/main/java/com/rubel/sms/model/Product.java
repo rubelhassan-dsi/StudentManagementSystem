@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,6 +22,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long productId;
 
+    @Size(min=4, max=50)
     private String name;
 
     @Column(name="unitPrice", columnDefinition="Decimal(10,2)")

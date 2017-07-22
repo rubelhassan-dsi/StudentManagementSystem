@@ -25,6 +25,9 @@
     </div>
 </section>
 <section>
+    <a href="<c:url value="/logout" />">Logout</a>
+    <form:errors path="product.*" class="alert alert-danger"
+                 element="div"/>
     <div class="container">
         <div class="row">
                 <form method="POST" action="/products/create" enctype="multipart/form-data">

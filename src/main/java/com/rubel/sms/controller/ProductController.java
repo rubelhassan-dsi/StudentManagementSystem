@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
@@ -43,10 +44,11 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView createProduct(@ModelAttribute("product") Product product, BindingResult result,
+    public ModelAndView createProduct( @ModelAttribute("product") @Valid Product product, BindingResult result,
                                       HttpServletRequest request){
         if(result.hasErrors()){
-            return new ModelAndView("redirect:/products/create");
+            System.out.println("Error:::::: " + "found");
+            return new ModelAndView("productForm");
         }
 
         product = productService.saveOrUpdate(product);
@@ -88,5 +90,20 @@ public class ProductController {
         ModelAndView modelAndView = new ModelAndView("products");
         modelAndView.addObject("products", products);
         return modelAndView;
+    }
+
+    @RequestMapping("/invalidPromoCode")
+    public String invalidPromoCode(){
+        return "invalidPromoCode";
+    }
+
+    @ExceptionHandler(NoProductsFoundUnderCategoryException.class)
+    public ModelAndView handleError(HttpServletRequest request, NoProductsFoundUnderCategoryException exception){
+        ModelAndView view = new ModelAndView();
+        view.addObject("invalidProductId", exception.getProductId());
+        view.addObject("exception", exception);
+        view.addObject("url", request.getRequestURL() + "?" + request.getQueryString());
+        view.setViewName("productNotFound");
+        return view;
     }
 }
