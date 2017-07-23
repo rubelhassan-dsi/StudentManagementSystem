@@ -13,7 +13,6 @@ import java.util.Map;
  * Created by rubel on 7/19/17.
  */
 @Service("productService")
-@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
